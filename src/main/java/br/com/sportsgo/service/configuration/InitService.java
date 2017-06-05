@@ -22,8 +22,11 @@ public class InitService implements WebApplicationInitializer {
 	}
 
 	private AnnotationConfigWebApplicationContext getContext() {
+		String basePackages = "br.com.sportsgo";
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-		context.setConfigLocation("br.com.sportsgo");
+		context.setConfigLocation(basePackages);
+		context.scan(basePackages);//This will load the configured components UserService, UserRepository,
+		context.refresh();
 		return context;
 	}
 

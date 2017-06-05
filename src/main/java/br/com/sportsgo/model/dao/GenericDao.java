@@ -12,10 +12,16 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.stereotype.Repository;
+
+@Transactional
+@Repository
 public abstract class GenericDao<T, I extends Serializable> {
 
-	@PersistenceContext
-	protected EntityManager entityManager;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
 
 	protected Class<T> persistedClass;
 
@@ -38,20 +44,15 @@ public abstract class GenericDao<T, I extends Serializable> {
 
 	@Transactional
 	public T salvar(T entity) {
-		EntityTransaction t = entityManager.getTransaction();
-		t.begin();
-		entityManager.persist(entity);
-		entityManager.flush();
-		t.commit();
+		hibernateTemplate.persist(entity);
+		hibernateTemplate.flush();
 		return entity;
 	}
+	
 	@Transactional
 	public T atualizar(T entity) {
-		EntityTransaction t = entityManager.getTransaction();
-		t.begin();
-		entityManager.merge(entity);
-		entityManager.flush();
-		t.commit();
+		hibernateTemplate.merge(entity);
+		hibernateTemplate.flush();
 		return entity;
 	}
 	@Transactional
